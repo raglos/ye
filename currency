@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
+    echo "";
+    echo "usage: ""$0"" <currency 1> <currency 2> <amount>";
+    echo "where <currency 1> is the currency you are converting FROM";
+    echo "and   <currency 2> is the currency you are converting TO";
+    echo "and   <amount>     is the amount being converted.";
+    echo "";
+    echo "example: ""$0"" USD GBP 100 --> 100 USD in GBP";
+    exit 1;
+fi
+
+# poor man's toupper ()
+# filter ^a-zA-Z
+CURR1=`echo "$1" | tr -dc 'a-zA-Z' | tr 'a-z' 'A-Z'`
+CURR2=`echo "$2" | tr -dc 'a-zA-Z' | tr 'a-z' 'A-Z'`
+AMOUNT=`echo "$3" | tr -dc '0-9'`
+
+if [[ -z "$AMOUNT" ]]; then
+    exit 1;
+fi
+
+REQ=`curl -s "http://www.xe.com/currencyconverter/convert/?Amount=1&From=""$CURR1""&To=""$CURR2"`
+DATA=`echo "$REQ" | grep -o '"rates":[[,\.0-9]*]}' | sed 's/^.*,\(.*\)..$/\1/'`
+
+if [[ -z "$DATA" ]]; then
+    echo "wrong currency code?";
+    exit 1;
+fi
+
+OUT=`echo "$DATA"" * ""$AMOUNT" | bc `
+echo "$OUT"; 
+
