@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [[ -z "$1" ]]; then
+    echo "usage: ""$0"" <4chan thread URI>";
+    exit 1;
+fi
+
+curl -s "$1" | grep -o '<a class=.fileThumb.\s*href=.//i.4cdn.org/[^/]*/[0-9]*\.[^\"]*\"' | sed 's/^.*\/\/\(.*\).$/https:\/\/\1/g' | xargs -P 16 -n 1 wget -q -nc
+
+exit 0;
+
