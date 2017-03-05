@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [[ -z "$1" ]]; then
+    echo "usage ""$0"" <imgur album url>";
+    exit 1;
+fi
+
+curl -s "$1" | grep '^\s*image\s*:\s*' | grep -o '{"hash":"[^\"]*","title":"[^\"]*","description":null,"width":[0-9]*,"height":[0-9]*,"size":[0-9]*,"ext":"[^\"]*"' | sed 's/^.*ash...\([^\"]*\).*ext...\(.*\).$/https:\/\/i.imgur.com\/\1\2/g' | xargs -P 16 -n 1 wget -q -nc --show-progress
