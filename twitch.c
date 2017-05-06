@@ -1,6 +1,6 @@
 #define _GNU_SOURCE
 /*
- * wrvc@github.com 2016-11-27
+ * wrclark@github.com 2016-11-27
  * twitch.c
  * view twitch chat in your terminal.
  * Usage ./twitch <twitch_channel>
