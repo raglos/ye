@@ -1,18 +1,27 @@
 #!/bin/bash
 # gachifetch
 
+uptime=$(awk '{sec=$1;d=0;h=0;m=0;while(sec>60){if(sec>=(60*60*24)){d++;sec-=(60*60*24);continue;}if(sec>=(60*60)){h++;sec-=(60*60);continue;}if(sec>=(60)){m++;sec-=(60);continue;}}if(d>0)printf("%d %s, ",d,(d==1?"day":"days"));if(h>0)printf("%d hours, ",h);if(m==0)printf("< 1 min.");else printf("%d min.",m);}' <<< "$(awk '{print $1}' /proc/uptime)")
+
 gachi="░░░░░▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░
 ░░░▓▓▓▓▓▓▒▒▒▒▒▒▓▓░░░░░░░
 ░░▓▓▓▓▒░░▒▒▓▓▒▒▓▓▓▓░░░░░ "$(whoami)"@"$(hostname)"
 ░▓▓▓▓▒░░▓▓▓▒▄▓░▒▄▄▄▓░░░░ OS: "$(sed '/^PRETTY/!d;s/^.*=.\(.*\).$/\1/' /etc/*-release)"
 ▓▓▓▓▓▒░░▒▀▀▀▀▒░▄░▄▒▓▓░░░ Kernel: "$(uname -r)"
 ▓▓▓▓▓▒░░▒▒▒▒▒▓▒▀▒▀▒▓▒▓░░ Shell: "$(echo $SHELL | sed 's/.*\/\([^\/]*\)$/\1/')"
-▓▓▓▓▓▒▒░░░▒▒▒░░▄▀▀▀▄▓▒▓░ Uptime: "$(uptime | sed 's/^\s*\(.*\)up.*$/\1/')"
+▓▓▓▓▓▒▒░░░▒▒▒░░▄▀▀▀▄▓▒▓░ Uptime: "$(echo $uptime)"
 ▓▓▓▓▓▓▒▒░░░▒▒▓▀▄▄▄▄▓▒▒▒▓ CPU: "$(sed -n '/^model /!d;s/.*:\s//g;p' /proc/cpuinfo | head -n1)"
 ░▓█▀▄▒▓▒▒░░░▒▒░░▀▀▀▒▒▒▒░ RAM: "$(free -h | awk 'FNR==2 { print $3 "/" $2}' | tr ',' '.')"
 ░░▓█▒▒▄▒▒▒▒▒▒▒░░▒▒▒▒▒▒▓░ Resolution: "$(xrandr -q | sed '/Scre/!d;s/.*rrent \(.*\),.*$/\1/')"
 ░░░▓▓▓▓▒▒▒▒▒▒▒▒░░░▒▒▒▓▓░ Root: "$(df -hT | sed '/\/$/!d' | awk '{print$4"/"$3" ("$2")"}' | tr ',' '.')"
 ░░░░░▓▓▒░░▒▒▒▒▒▒▒▒▒▒▒▓▓░
 ░░░░░░▓▒▒░░░░▒▒▒▒▒▒▒▓▓░░";
+
+lol=$(which lolcat)
+if [[ "${#lol}" -lt 2 ]]; then
+	echo "$gachi";
+	echo "pro tip: download lolcat";
+	exit 0;
+fi
 
 echo "$gachi" | lolcat -F 0.4
