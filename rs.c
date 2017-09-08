@@ -51,6 +51,9 @@ int main (int argc, char *argv[]) {
     if (l2 < MIN_LEVEL || l2 > MAX_LEVEL)
         usage (argv);
 
+    if (l1 > l2)
+        usage (argv);
+
     i = atoi (argv[3]);
     if (i < 1)
         usage (argv);
